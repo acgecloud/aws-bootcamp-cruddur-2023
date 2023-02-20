@@ -1,8 +1,16 @@
 # Week 0 — Billing and Architecture
 
+## Required Homework/Tasks
+
+I want to include: Diagrams, Proof I set up Credentials, Billing Alarm & Budget, & AWS CLI
+
+## Homework Challenges
+
+I want to show I created the EventBridge Health Alert, worked w/ Well-Architected Framework, & Added to the Diagram, Show I set MFA & IAM Role, 
+
 ## Notes that I went through for setting up aws account access and billing setup in Gitpod:
 
-
+# Appendix
 ## Getting the AWS CLI Working
 
 We'll be using the AWS CLI often in this bootcamp,
