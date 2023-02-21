@@ -2,36 +2,11 @@
 
 ## Required Homework/Tasks
 
-AWS CLI - Keep the initial yaml excerpt
-Credentials - Show the sts get-identity output from Gitpod
-Billing & Budget - Show the images of the SNS and Alarm Outputs
-Napkin - Attach Image of Napkin
-Logical Diagram - Attach Image (Share LucidChart)
+### Installed AWS CLI in Gitpod Environment
 
-## Homework Challenges
+The AWS CLI will be used often in the bootcamp, so I configured the gitpod.yml to install the AWS CLI when the Gitpod environment launches, and also set the CLI to use partial auto-prompt mode to make it easer for writing CLI commands. The bash commands we are referenced from: [AWS CLI Install Instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
-EventBridge Health Alert Screenshot
-Well-Architected Framework PDF
-Screenshot of CI/CD Diagram w/ explanation (Share LucidChart)
-Screenshot of Requested Service Limits + Screenshot of Researched Service Limits for ECS + Explanation for those Limits
-
-## Notes that I went through for setting up aws account access and billing setup in Gitpod:
-
-# Appendix
-## Getting the AWS CLI Working
-
-We'll be using the AWS CLI often in this bootcamp,
-so we'll proceed to installing this account.
-
-
-### Install AWS CLI
-
-- We are going to install the AWS CLI when our Gitpod enviroment lanuches.
-- We are are going to set AWS CLI to use partial autoprompt mode to make it easier to debug CLI commands.
-- The bash commands we are using are the same as the [AWS CLI Install Instructions]https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-
-
-Update our `.gitpod.yml` to include the following task.
+The `.gitpod.yml` was updated to include the following task.
 
 ```sh
 tasks:
@@ -46,11 +21,9 @@ tasks:
       cd $THEIA_WORKSPACE_ROOT
 ```
 
-We'll also run these commands indivually to perform the install manually
+### Created a New IAM User and Generated AWS Credentials
 
-### Create a new User and Generate AWS Credentials
-
-- Go to (IAM Users Console](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/users) andrew create a new user
+In the IAM User Console, I followed the steps below to create an Admin User:
 - `Enable console access` for the user
 - Create a new `Admin` Group and apply `AdministratorAccess`
 - Create the user and go find and click into the user
@@ -60,96 +33,67 @@ We'll also run these commands indivually to perform the install manually
 
 ### Set Env Vars
 
-We will set these credentials for the current bash terminal
-```
-export AWS_ACCESS_KEY_ID=""
-export AWS_SECRET_ACCESS_KEY=""
-export AWS_DEFAULT_REGION=us-east-1
-```
-
-We'll tell Gitpod to remember these credentials if we relaunch our workspaces
+I configured the environment variables in Gitpod to securely hold the access information for my workspaces.
 ```
 gp env AWS_ACCESS_KEY_ID=""
 gp env AWS_SECRET_ACCESS_KEY=""
 gp env AWS_DEFAULT_REGION=us-east-1
 ```
 
-### Check that the AWS CLI is working and you are the expected user
+### Confirmed with the AWS CLI in Gitpod that the user was successfully added
 
 ```sh
 aws sts get-caller-identity
 ```
 
-You should see something like this:
+The following output confirmed the configuration was successful
 ```json
 {
-    "UserId": "AIFBZRJIQN2ONP4ET4EK4",
-    "Account": "655602346534",
-    "Arn": "arn:aws:iam::655602346534:user/andrewcloudcamp"
+    "UserId": "****************5O4B",
+    "Account": "237457675866",
+    "Arn": "arn:aws:iam::237457675866:user/Ace"
 }
 ```
 
-## Enable Billing 
+### Enabled Billing and Created Budget
+To enable Billing, I turned on Billing Alerts to recieve alerts by going to my Root Account [Billing Page](https://console.aws.amazon.com/billing/), and, under `Billing Preferences`, I chose the option to `Receive Billing Alerts`, and saved the preferences. I then followed the instructions, referencing Chirag's video on Youtube [AWS-SNSTopic-and-BillingAlarm-Reference](https://www.youtube.com/watch?v=OVw3RrlP-sI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=13) to create the following:
 
-We need to turn on Billing Alerts to recieve alerts...
+#### Created SNS Topic to send emails when billing alarm is activated
+![SNS-Topic-Created](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/SNS-Subscriptions-for-CloudWatchBillingAlarm-and-EventBridgeHealthAlert.PNG)
+#### Created BillingAlarm that detects when cost threshold is reached
+![AWS-BillingAlarm-Created](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/AWS-BillingAlarm-Created.PNG)
+
+#### Created an AWS Budget for forecastable monthly spending
+![AWS-Budget-Created](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/AWS-Budget-Created.PNG)
+
+### Created Conceptual Diagram of Cruddur Application on Napkin
+![Cruddur-Conceptual-Napkin-by-AceCloud](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/CruddurNapkinDiagram-by-AceCloud.jpg)
+
+### Created Logical Diagram of Cruddur Application in LucidChart
+I followed along with Andrew, referencing [Logical-Chart-Recreation-Youtube-Video](https://www.youtube.com/watch?v=K6FDrI_tz0k&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv)
+
+*Please access the following link to view the diagram in LucidChart: [Logical-Diagram](https://lucid.app/lucidchart/e49790d0-441a-45d6-a8d8-feb6192ea71e/edit?viewport_loc=-300%2C-403%2C2576%2C1175%2C0_0)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Homework Challenges
+
+### Used EventBridge to hookup Health Dashboard to SNS and send notifications when there are service health issues.
+Referencing AWS documentation, I learned how to create a service health alert with EventBridge and SNS to hookup the Health DashBoard.
+The following EventBridge documentation provided a step-by-step process of the various sources and targets that can be configured to EventBridge rules to set up notifications for purposes such as Health Alerts: [EventBridge-Docs-to-Configure-Rules](https://docs.aws.amazon.com/health/latest/ug/cloudwatch-events-health.html)
+The following SNS documentation was also a useful refresher for practicing with setting up SNS topics to become more familiar with the configuration of notification messages via email: [SNS-Docs-to-Configure-Email-Notification](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/US_SetupSNS.html)
+
+As a result, I was able to configure EventBridge and SNS for service health alerts with the following outputs:
+#### Created SNS Email Topic for Health Alerts
+![SNS-Topic-including-Service-Health-Alert](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/SNS-Subscriptions-for-CloudWatchBillingAlarm-and-EventBridgeHealthAlert.PNG)
+#### Created EventBridge Rule configured with the Health Dashboard
+![EventBridge-Output-of-Service-Health-Alert](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/EventBridge-HealthCheck.PNG)
+
+### Reviewed all the questions of each pillars in the Well Architected Tool (No specialized lens)
+Referencing Andrew's Youtube video on getting started with the Well-Architected Framework Tool [Well-Architected-Framework-Tool-Youtube-Video](https://www.youtube.com/watch?v=i-hOfAJb3cE&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=16), I reviewed quite a few of the 58 questions and took the time to answer a few from each pillar. There were quite a few considerations when providing notes for each of the questions, however, this was a great brainstorming opportunity to work through some of the questions by providing notes with the checklist. I went through all of the questions in the Operational Excellence Pillar as it provided the most opportunity for conceptual thinking regarding organizational planning and how it would look like to mobilize teams to take on such a critical project for the organization and its stakeholders, and then I also spent some more time working on some of the Security pillar questions as that is a group of services in the Cloud that I am particularly interested in and the kinds of considerations that critical to think about in the verbage including network topology, resiliency, and adapting to the ever-changing threat landscape. Then, I also answered a few of the questions in the other pillars which revolved around optimizing performance, redundancy, cost, and sustainability which are also critical domains in the overall AWS domain space. Please see attached a PDF output of my work on these questions generated from the Well-Architected Framework Tool in AWS: ![AceCloud's-Well-Architected-Framework-Tool-Responses]()
+
+### Created an architectural diagram (to the best of my ability) of the CI/CD logical pipeline in Lucid Charts
 
 
-- In your Root Account go to the [Billing Page](https://console.aws.amazon.com/billing/)
-- Under `Billing Preferences` Choose `Receive Billing Alerts`
-- Save Preferences
+### Researched the technical and service limits of specific services (ECS) and requested a Service Limit Increase via the ServiceQuota Tool
 
-
-## Creating a Billing Alarm
-
-### Create SNS Topic
-
-- We need an SNS topic before we create an alarm.
-- The SNS topic is what will delivery us an alert when we get overbilled
-- [aws sns create-topic](https://docs.aws.amazon.com/cli/latest/reference/sns/create-topic.html)
-
-We'll create a SNS Topic
-```sh
-aws sns create-topic --name billing-alarm
-```
-which will return a TopicARN
-
-We'll create a subscription supply the TopicARN and our Email
-```sh
-aws sns subscribe \
-    --topic-arn TopicARN \
-    --protocol email \
-    --notification-endpoint your@email.com
-```
-
-Check your email and confirm the subscription
-
-#### Create Alarm
-
-- [aws cloudwatch put-metric-alarm](https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/put-metric-alarm.html)
-- [Create an Alarm via AWS CLI](https://aws.amazon.com/premiumsupport/knowledge-center/cloudwatch-estimatedcharges-alarm/)
-- We need to update the configuration json script with the TopicARN we generated earlier
-- We are just a json file because --metrics is is required for expressions and so its easier to us a JSON file.
-
-```sh
-aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm_config.json
-```
-
-## Create an AWS Budget
-
-[aws budgets create-budget](https://docs.aws.amazon.com/cli/latest/reference/budgets/create-budget.html)
-
-Get your AWS Account ID
-```sh
-aws sts get-caller-identity --query Account --output text
-```
-
-- Supply your AWS Account ID
-- Update the json files
-- This is another case with AWS CLI its just much easier to json files due to lots of nested json
-
-```sh
-aws budgets create-budget \
-    --account-id AccountID \
-    --budget file://aws/json/budget.json \
-    --notifications-with-subscribers file://aws/json/budget-notifications-with-subscribers.json
-```
