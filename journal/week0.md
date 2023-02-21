@@ -2,11 +2,18 @@
 
 ## Required Homework/Tasks
 
-I want to include: Diagrams, Proof I set up Credentials, Billing Alarm & Budget, & AWS CLI
+AWS CLI - Keep the initial yaml excerpt
+Credentials - Show the sts get-identity output from Gitpod
+Billing & Budget - Show the images of the SNS and Alarm Outputs
+Napkin - Attach Image of Napkin
+Logical Diagram - Attach Image (Share LucidChart)
 
 ## Homework Challenges
 
-I want to show I created the EventBridge Health Alert, worked w/ Well-Architected Framework, & Added to the Diagram, Show I set MFA & IAM Role, 
+EventBridge Health Alert Screenshot
+Well-Architected Framework PDF
+Screenshot of CI/CD Diagram w/ explanation (Share LucidChart)
+Screenshot of Requested Service Limits + Screenshot of Researched Service Limits for ECS + Explanation for those Limits
 
 ## Notes that I went through for setting up aws account access and billing setup in Gitpod:
 
