@@ -72,7 +72,9 @@ To enable Billing, I turned on Billing Alerts to recieve alerts by going to my R
 ### Created Logical Diagram of Cruddur Application in LucidChart
 I followed along with Andrew, referencing [Logical-Chart-Recreation-Youtube-Video](https://www.youtube.com/watch?v=K6FDrI_tz0k&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv)
 
-*Please access the following link to view the diagram in LucidChart: [Logical-Diagram]([https://lucid.app/lucidchart/e49790d0-441a-45d6-a8d8-feb6192ea71e/edit?viewport_loc=-300%2C-403%2C2576%2C1175%2C0_0](https://lucid.app/lucidchart/e49790d0-441a-45d6-a8d8-feb6192ea71e/edit?viewport_loc=-300%2C-403%2C2576%2C1175%2C0_0&invitationId=inv_ae568b21-cca3-4961-92d2-78f1a8535336)
+*Please access the following link to view the diagram in LucidChart: 
+
+[Logical-Diagram]([https://lucid.app/lucidchart/e49790d0-441a-45d6-a8d8-feb6192ea71e/edit?viewport_loc=-300%2C-403%2C2576%2C1175%2C0_0](https://lucid.app/lucidchart/e49790d0-441a-45d6-a8d8-feb6192ea71e/edit?viewport_loc=-300%2C-403%2C2576%2C1175%2C0_0&invitationId=inv_ae568b21-cca3-4961-92d2-78f1a8535336)
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
