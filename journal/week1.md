@@ -1,5 +1,7 @@
 # Week 1 — App Containerization
 
+# Homework Tasks
+
 ### Somes Notes I need to work on setting up Docker:
 
 ## References
@@ -67,51 +69,6 @@ docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-
 docker run --rm -p 4567:4567 -it  -e FRONTEND_URL -e BACKEND_URL backend-flask
 unset FRONTEND_URL="*"
 unset BACKEND_URL="*"
-```
-
-Run in background
-```sh
-docker container run --rm -p 4567:4567 -d backend-flask
-```
-
-Return the container id into an Env Vat
-```sh
-CONTAINER_ID=$(docker run --rm -p 4567:4567 -d backend-flask)
-```
-
-> docker container run is idiomatic, docker run is legacy syntax but is commonly used.
-### Get Container Images or Running Container Ids
-
-```
-docker ps
-docker images
-```
-
-
-### Send Curl to Test Server
-
-```sh
-curl -X GET http://localhost:4567/api/activities/home -H "Accept: application/json" -H "Content-Type: application/json"
-```
-
-### Check Container Logs
-
-```sh
-docker logs CONTAINER_ID -f
-docker logs backend-flask -f
-docker logs $CONTAINER_ID -f
-```
-
-###  Debugging  adjacent containers with other containers
-
-```sh
-docker run --rm -it curlimages/curl "-X GET http://localhost:4567/api/activities/home -H \"Accept: application/json\" -H \"Content-Type: application/json\""
-```
-
-busybosy is often used for debugging since it install a bunch of thing
-
-```sh
-docker run --rm -it busybosy
 ```
 
 ### Gain Access to a Container
@@ -262,25 +219,4 @@ services:
     working_dir: /home/dynamodblocal
 ```
 
-Example of using DynamoDB local
-https://github.com/100DaysOfCloud/challenge-dynamodb-local
-
-## Volumes
-
-directory volume mapping
-
-```yaml
-volumes: 
-- "./docker/dynamodb:/home/dynamodblocal/data"
-```
-
-named volume mapping
-
-```yaml
-volumes: 
-  - db:/var/lib/postgresql/data
-volumes:
-  db:
-    driver: local
-```
-****
+# Homework Challenges
