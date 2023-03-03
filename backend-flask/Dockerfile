@@ -1,8 +1,12 @@
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-buster AS compile-image
 
 # Container
 # make a new folder inside the container
 WORKDIR /backend-flask
+
+RUN python -m venv /opt/venv
+# Make sure we use the virtualenv:
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Outside Container -> Inside Container
 # this contains the libraries we want to install to run the app
@@ -10,7 +14,16 @@ COPY requirements.txt requirements.txt
 
 # Inside Container
 # installs the python libraries used for the app
-RUN pip3 install -r requirements.txt
+RUN pip3 install -Ur requirements.txt
+
+FROM python:3.10-alpine AS build-image
+
+# Set working directory
+WORKDIR /backend-flask
+COPY --from=compile-image /opt/venv /opt/venv
+
+# Make sure we use the virtualenv:
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Outside Container -> Inside Container
 # . generally means everything in the current directory
