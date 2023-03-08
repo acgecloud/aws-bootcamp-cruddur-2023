@@ -2,45 +2,14 @@
 
 # Homework Tasks
 
-### Somes Notes I need to work on setting up Docker:
+## Setting Up Docker and Docker Compose with Cruddur
 
-## References
+### Added Dockerfiles for Frontend and Backend
 
-Good Article for Debugging Connection Refused
-https://pythonspeed.com/articles/docker-connection-refused/
+In following through the live stream for Week 1, I created the Dockerfiles within the following project folder location: 
+`backend-flask/Dockerfile` and `frontend-react-js/Dockerfile`
 
-
-## VSCode Docker Extension
-
-Docker for VSCode makes it easy to work with Docker
-
-https://code.visualstudio.com/docs/containers/overview
-
-> Gitpod is preinstalled with theis extension
-## Containerize Backend
-
-### Run Python
-
-```sh
-cd backend-flask
-export FRONTEND_URL="*"
-export BACKEND_URL="*"
-python3 -m flask run --host=0.0.0.0 --port=4567
-cd ..
-```
-
-- make sure to unlock the port on the port tab
-- open the link for 4567 in your browser
-- append to the url to `/api/activities/home`
-- you should get back json
-
-
-
-### Add Dockerfile
-
-Create a file here: `backend-flask/Dockerfile`
-
-```dockerfile
+```Backend Dockerfile
 FROM python:3.10-slim-buster
 WORKDIR /backend-flask
 COPY requirements.txt requirements.txt
@@ -51,64 +20,7 @@ EXPOSE ${PORT}
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 ```
 
-### Build Container
-
-```sh
-docker build -t  backend-flask ./backend-flask
-```
-
-### Run Container
-
-Run 
-```sh
-docker run --rm -p 4567:4567 -it backend-flask
-FRONTEND_URL="*" BACKEND_URL="*" docker run --rm -p 4567:4567 -it backend-flask
-export FRONTEND_URL="*"
-export BACKEND_URL="*"
-docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-flask
-docker run --rm -p 4567:4567 -it  -e FRONTEND_URL -e BACKEND_URL backend-flask
-unset FRONTEND_URL="*"
-unset BACKEND_URL="*"
-```
-
-### Gain Access to a Container
-
-```sh
-docker exec CONTAINER_ID -it /bin/bash
-```
-
-> You can just right click a container and see logs in VSCode with Docker extension
-### Delete an Image
-
-```sh
-docker image rm backend-flask --force
-```
-
-> docker rmi backend-flask is the legacy syntax, you might see this is old docker tutorials and articles.
-> There are some cases where you need to use the --force
-### Overriding Ports
-
-```sh
-FLASK_ENV=production PORT=8080 docker run -p 4567:4567 -it backend-flask
-```
-
-> Look at Dockerfile to see how ${PORT} is interpolated
-## Containerize Frontend
-
-## Run NPM Install
-
-We have to run NPM Install before building the container since it needs to copy the contents of node_modules
-
-```
-cd frontend-react-js
-npm i
-```
-
-### Create Docker File
-
-Create a file here: `frontend-react-js/Dockerfile`
-
-```dockerfile
+```Frontend Dockerfile
 FROM node:16.18
 ENV PORT=3000
 COPY . /frontend-react-js
@@ -118,23 +30,35 @@ EXPOSE ${PORT}
 CMD ["npm", "start"]
 ```
 
-### Build Container
+### Built Images for Frontend and Backend
 
-```sh
+I ran the following command to build both images as per following through the guide in the livestream:
+
+```sh Backend
+docker build -t  backend-flask ./backend-flask
+```
+
+```sh Frontend
 docker build -t frontend-react-js ./frontend-react-js
 ```
 
-### Run Container
+### Running Containers for Frotnend and Backend
 
-```sh
+I ran the following commands to get the containers running in continuing to following through the guide in the livestream:
+*Note: Before running the frontend image, I ran `npm install` in the frontend directory to make sure all of the node packages were up-to-date.
+*Note: I also made sure to set the identifiers for the frontend and backend urls in the backend container environment definition.
+
+```sh Backend
+docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-flask
+```
+
+```sh Frontend
 docker run -p 3000:3000 -d frontend-react-js
 ```
 
-## Multiple Containers
+### Created a docker-compose file
 
-### Create a docker-compose file
-
-Create `docker-compose.yml` at the root of your project.
+Created the `docker-compose.yml` file at the root of the project folder to orchestrate running both containers together at once:
 
 ```yaml
 version: "3.8"
@@ -164,47 +88,11 @@ networks:
     name: cruddur
 ```
 
-## Adding DynamoDB Local and Postgres
+### Added DynamoDB Local and Postgres Containers
 
-We are going to use Postgres and DynamoDB local in future labs
-We can bring them in as containers and reference them externally
+For a future date in the bootcamp, the docker compose file was prepared with Postgres and DynamoDB local containers for external reference.
 
-Lets integrate the following into our existing docker compose file:
-
-### Postgres
-
-```yaml
-services:
-  db:
-    image: postgres:13-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - '5432:5432'
-    volumes: 
-      - db:/var/lib/postgresql/data
-volumes:
-  db:
-    driver: local
-```
-
-To install the postgres client into Gitpod
-
-```sh
-  - name: postgres
-    init: |
-      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
-      sudo apt update
-      sudo apt install -y postgresql-client-13 libpq-dev
-```
-
-### DynamoDB Local
-
-```yaml
-services:
+``` Adding DynamoDB Local
   dynamodb-local:
     # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
     # We needed to add user:root to get this working.
@@ -219,4 +107,42 @@ services:
     working_dir: /home/dynamodblocal
 ```
 
+```Adding Postgres
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
+```
+
+In addition, I made sure to install the Postgres Client by including it as a task in the Gitpod.yml file:
+
+```sh
+  - name: postgres
+    init: |
+      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      sudo apt update
+      sudo apt install -y postgresql-client-13 libpq-dev
+```
+
 # Homework Challenges
+
+## Run the dockerfile CMD as an external script
+
+## Push and tag a image to DockerHub
+
+## Use multi-stage building for a Dockerfile build
+
+## Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
+
+## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes
