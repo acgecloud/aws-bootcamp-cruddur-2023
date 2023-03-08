@@ -243,12 +243,37 @@ CMD ["npm", "start"]
 
 ## Implement a healthcheck in the V3 Docker compose file
 
+A Health Check implementation in the Docker Compose file is necessary for ensuring that the orchestrated collection of frontend and backend containers is running without any issues. In applying this concept to the `docker-compose.yml` in the current project I learned from the following resource [Docker-Compose_Health-Check_Tutorial](https://medium.com/geekculture/how-to-successfully-implement-a-healthcheck-in-docker-compose-efced60bc08e) for documentation on how to specify the check. A curl commmand was used to test the connection to the application through to the backend_url to make sure that data is being recieved when pinging to the backend of the application.  The command is being used to make a ping to the application and return if an error is received while specifying the timing of the ping.
 
+The Health Check was added to the frontend of the service, referencing if a connection is successful through to the backend:
+```Docker-Compose Health Check
+frontend-react-js:
+    environment:
+      REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./frontend-react-js
+    ports:
+      - "3000:3000"
+    # Added health-check, referencing https://medium.com/geekculture/how-to-successfully-implement-a-healthcheck-in-docker-compose-efced60bc08e
+    healthcheck:
+      test: curl --fail "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}" || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+    volumes:
+      - ./frontend-react-js:/frontend-react-js
+```
 
 ## Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
 
-
+I installed Docker on my local machine by creating an account on DockerHub and downloading the Docker Desktop application to get started. I downloaded the project folder from Github locally. In order to run the Docker Compose file locally, I needed to update the the url's for the backend and frontend to `"http://localhost:4567"` and `"http://localhost:3000"` respectively because the gitpod url's are not applicable in the local machine environment. For the frontend, I also deleted the `package-lock.json` and `package.json` files because they were interfering with the `npm install` process during `docker build`.
+Once these configurations were performed, then the docker compose command was initiated to successfully orchestrate the two containers:
+![]()
+![]()
 
 ## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes
 
 
+
+![]()
+![]()
