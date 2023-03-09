@@ -158,7 +158,10 @@ docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-
 
 ## Push and tag a image to DockerHub
 
+To push and tag an image to Dockerhub, I created a Dockerhub account and downloaded the Docker Desktop application to get started. I pulled the docker/getting-started base image to practice with getting acquainted with the tagging and pushing features to Dockerhub. After pulling the image `docker run -d -p 80:80 docker/getting-started`, I then re-tagged the image `docker tag docker/getting-started acgecloud/docker-tutorial-acge:getting-started-v1` and then pushed it `docker tag docker/getting-started acgecloud/docker-tutorial-acge:getting-started-v1` to a private repository within the Dockerhub account I recently created to practice with pushing and tagging docker images. I have attached an image of the result as follows:
+*Note: Docker Docs were very useful in practicing features, and used for reference: [Docker Repo Documentation](https://docs.docker.com/docker-hub/repos/)
 
+![Docker Image Tagged and Pushed](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week1/docker-image-tagging-and-pushing-to-tag.PNG)
 
 ## Use multi-stage building for a Dockerfile build
 
@@ -168,7 +171,7 @@ Multi-stage building refers to the use of using multiple base images in successi
 I decided to use a virtual environment for the python backend to keep all of the packages in one place to make it easier for copying over to the final compiler image. 
 After installing the packages and setting up the requirements, I used an Alpine base image for the final compilation, which is a lighterweight image to reduce the final docker image size. The resulting image build, as shown in the image below, reduced the size by approximately half.
 
-![]()
+![Backend Multi-Stage](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week1/save-size-multi-stage-python-backend.jpg)
 
 ```Multi-Stage Backend
 FROM python:3.10-slim-buster AS compile-image
@@ -219,7 +222,7 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 In this example, the key difference was also using alpine to reduce the size of the final compiled image. As a result, the final size of the container was reduced by two-thirds. The number of node packages occupy a significant portion of the size, of which there are a number of extraneous packages that can be removed with an updated dependencies list, however, the current extent of work was adequate in understanding how multi-stage builds work and the resulting advantages of creating Docker images this way, which is also a best practice that turned out to be implemented in each Dockerfile. The resulting image build was approximately two-thirds less than the original build, which is shown in the below image.
 *Note: In hindsight, for pruning extraneous packages from Node, an environment variable, `NODE_ENV` can be set to production, which would likely reduce some size.
 
-![]()
+![Frontend Multi-Stage](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week1/size-multi-stage-react-js-frontend.jpg)
 
 ```Multi-Stage Frontend
 FROM node:16.18 AS builder-image
@@ -268,12 +271,15 @@ frontend-react-js:
 
 I installed Docker on my local machine by creating an account on DockerHub and downloading the Docker Desktop application to get started. I downloaded the project folder from Github locally. In order to run the Docker Compose file locally, I needed to update the the url's for the backend and frontend to `"http://localhost:4567"` and `"http://localhost:3000"` respectively because the gitpod url's are not applicable in the local machine environment. For the frontend, I also deleted the `package-lock.json` and `package.json` files because they were interfering with the `npm install` process during `docker build`.
 Once these configurations were performed, then the docker compose command was initiated to successfully orchestrate the two containers:
-![]()
-![]()
+
+![Final Output of Docker Compose to Local Machine](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week1/Result%20of%20Running%20Docker%20Compose%20on%20Local%20Machine.PNG)
 
 ## Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes
 
+In AWS, I launced a Linux AMI EC2 and went through the installation process of configuring the instance wtih Docker via `sudo yum install -y docker` and initiated the docker service `sudo docker service start`. Apart from pulling a container, I decided to instead build and run an image from the EC2; I decided to use the docker images from the project itself to practice in this challenge. To accomplish this task:
 
+1. I performed a secure copy command (scp) from my local machine to EC2 to copy the project folder, as shown in the following image:
+![sCP-to-EC2](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week1/scp-to-ec2.PNG)
 
-![]()
-![]()
+2. After uploading the files to the EC2 instance file space, I decided to test runnning Docker with the backend, and was able to ultimately run the backend after building `docker build -t  backend-flask ./backend-flask` and running `docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-flask` the container, as shown in the following image:
+![Running Backend Container on EC2](https://github.com/acgecloud/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week1/Running-Docker-Image-on-EC2.PNG)
