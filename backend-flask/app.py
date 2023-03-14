@@ -3,6 +3,7 @@ from flask import request
 from flask_cors import CORS, cross_origin
 import os
 
+
 from services.home_activities import *
 from services.notifications_activities import *
 from services.user_activities import *
@@ -25,6 +26,11 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+
+
+# This is for AWS X-Ray ---------------------------
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 
 
 # This is for CloudWatch Logs ------------------
@@ -57,11 +63,17 @@ provider = TracerProvider()
 # This code piece reads from our environment variables to know where to send the spans
 processor = BatchSpanProcessor(OTLPSpanExporter())
 provider.add_span_processor(processor)
-# Show this in the logs within the backend-flask app -> it will go to standard output
+# Show this in the logs within the backend-flask app -> it will go to standard output to confirm we are getting outputs
 simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
 provider.add_span_processor(simple_processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
+
+# This is for AWS X-Ray ------------------------------------
+# This configuration is used to start up the recorder
+xray_url = os.getenv("AWS_XRAY_URL")
+xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
+XRayMiddleware(app, xray_recorder)
 
 app = Flask(__name__)
 
