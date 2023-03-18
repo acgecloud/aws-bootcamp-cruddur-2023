@@ -7,6 +7,29 @@ import ActivityFeed from '../components/ActivityFeed';
 import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
+import { trace, context, } from '@opentelemetry/api';
+
+const tracer = trace.getTracer();
+
+const rootSpan = tracer.startActiveSpan('document_load', span => {
+  //start span when navigating to page
+  span.setAttribute('HomePageWindow', window.location.href);
+  window.onload = (event) => {
+    // ... do loading things
+    // ... attach timing information
+    span.end(); //once page is loaded, end the span
+  };
+
+  button.clicked = (event) => {
+    tracer.startActiveSpan('button_clicked', btnSpan => {
+      // Add your attributes to describe the button clicked here
+      btnSpan.setAttribute('some.attribute', 'some.value');
+
+      btnSpan.end();
+    });
+  }
+});
+
 // [TODO] Authenication
 import Cookies from 'js-cookie'
 

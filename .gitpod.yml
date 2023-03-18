@@ -19,6 +19,14 @@ tasks:
       cd $THEIA_WORKSPACE_ROOT
       cd ./frontend-react-js
       npm i
+      npm install --save \
+        @opentelemetry/api \
+        @opentelemetry/sdk-trace-web \
+        @opentelemetry/exporter-trace-otlp-http \
+        @opentelemetry/context-zone \
+        @opentelemetry/instrumentation \
+        @opentelemetry/instrumentation-xml-http-request \
+        @opentelemetry/instrumentation-fetch
       cd $THEIA_WORKSPACE_ROOT
 
 vscode:
