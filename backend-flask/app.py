@@ -166,8 +166,9 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @xray_recorder.capture('activities_home')
 def data_home():
+  user_home_handle = 'andrewbrown'
   #data = HomeActivities.run(logger=LOGGER)
-  data = HomeActivities.run()
+  data = HomeActivities.run(user_home_handle=user_home_handle)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])

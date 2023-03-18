@@ -6,14 +6,14 @@ tracer = trace.get_tracer("home.activities")
 
 class HomeActivities:
   #def run(logger):
-  def run():
+  def run(user_home_handle):
     #logger.info('Hello Cloudwatch! from  /api/activities/home')
     with tracer.start_as_current_span("home-activities-mock-data"):
       span = trace.get_current_span()
       now = datetime.now(timezone.utc).astimezone()
       span.set_attribute("app.now", now.isoformat())
       # Adding further attributes based on Semantic Conventions
-      span.set_attribute("user.id", "tester")
+      span.set_attribute("user.id", user_home_handle)
       results = [{
         'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
         'handle':  'Andrew Brown',
